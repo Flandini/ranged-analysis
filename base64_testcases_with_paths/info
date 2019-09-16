@@ -1,0 +1,19 @@
+bin/klee -posix-runtime -emit-all-errors -libc=uclibc -only-output-states-covering-new -max-memory=0 -max-time=600 -exit-after-compare -write-paths -search=dfs -beginTestCase=/home/flandini/research/directory_traversal/klee-out-5/test000001.ktest -endTestCase=/home/flandini/research/directory_traversal/klee-out-5/test000002.ktest /home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc -sym-args 1 2 10
+PID: 27688
+Using monotonic steady clock with 1/1000000000s resolution
+Started: 2019-09-16 15:58:08
+BEGIN searcher description
+DFSSearcher
+END searcher description
+Finished: 2019-09-16 16:00:43
+Elapsed: 00:02:35
+KLEE: done: explored paths = 2856
+KLEE: done: avg. constructs per query = 52
+KLEE: done: total queries = 1133
+KLEE: done: valid queries = 1005
+KLEE: done: invalid queries = 128
+KLEE: done: query cex = 1133
+
+KLEE: done: total instructions = 29489987
+KLEE: done: completed paths = 2856
+KLEE: done: generated tests = 16

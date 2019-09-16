@@ -1,0 +1,8 @@
+KLEE: Using STP solver backend
+KLEE: Reading test case: /home/flandini/research/directory_traversal/klee-out-5/test000001.ktest
+
+KLEE: Reading test case: /home/flandini/research/directory_traversal/klee-out-5/test000002.ktest
+
+KLEE: Only Do Compare is set to true.
+
+KLEE: halting execution, dumping remaining states
