@@ -44,6 +44,7 @@ def compare(directory)
 
   if pathFiles.length == 0
     STDERR.puts "Didn't find any path files to compare"
+    return
   end
 
   puts "Original paths are: "
