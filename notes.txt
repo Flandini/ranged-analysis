@@ -1,0 +1,1 @@
+klee -optimize -emit-all-errors -only-output-states-covering-new -max-time=600 -max-memory=0 -search=dfs -libc=uclibc -posix-runtime src/whoami.0.5.precodegen.bc
