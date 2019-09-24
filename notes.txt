@@ -1,1 +1,17 @@
 klee -optimize -emit-all-errors -only-output-states-covering-new -max-time=600 -max-memory=0 -search=dfs -libc=uclibc -posix-runtime src/whoami.0.5.precodegen.bc
+
+  bin/klee -posix-runtime \
+    -emit-all-errors \
+    -libc=uclibc \
+    -only-output-states-covering-new \
+    -max-time=600 \
+    -max-memory=0 \
+    -search=dfs \
+    -write-paths \
+    -ranged-analysis \
++   -use-cex-cache=false \
+    -beginTestCase=/home/flandini/research/ranged_analysis/base64_testcases_with_paths/test000016.kquery \
+    -endTestCase=/home/flandini/research/ranged_analysis/base64_testcases_with_paths/test000015.kquery \
+    /home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc \
+    -sym-args 1 2 10
+

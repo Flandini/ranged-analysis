@@ -14,7 +14,7 @@ class TestCase
 
   def initialize(fileName)
     begin
-      @pathData = File.read(fileName).split "\n"
+      @pathData = File.read(fileName).split("\n").join("")
     rescue Error => e
       STDERR.puts e
     end
@@ -23,19 +23,21 @@ class TestCase
   end
 
   def <=>(other)
-    smallerLength = @pathData.length > other.pathData.length ? other.pathData.length : @pathData.length
+    smallerLength = [@pathData.length, other.pathData.length].min
 
-    (0..smallerLength).each do |i|
+    (0..smallerLength-1).each do |i|
       if @pathData[i] != other.pathData[i]
-        if pathData[i] == "1"
-          return -1
-        else
-          return 1
-        end
+        return (@pathData[i] == "1" ? -1 : 1)
       end
     end
 
-    return 0
+    if @pathData.length == other.pathData.length
+      0
+    elsif @pathData.length < other.pathData.length
+      -1
+    else
+      1
+    end
   end
 end
 
@@ -51,7 +53,7 @@ def compare(directory)
   puts pathFiles
 
   puts "Sorted paths are: "
-  puts pathFiles.map { |fileName| TestCase.new(fileName) }.sort.map(&:name)
+  puts pathFiles.map { |fileName| TestCase.new(fileName) }.sort { |a, b| a <=> b }.map(&:name)
 end
 
 compare ARGV[0]
