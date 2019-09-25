@@ -15,3 +15,19 @@ klee -optimize -emit-all-errors -only-output-states-covering-new -max-time=600 -
     /home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc \
     -sym-args 1 2 10
 
+  bin/klee -posix-runtime \
+    -emit-all-errors \
+    -libc=uclibc \
+    -only-output-states-covering-new \
+    -max-time=600 \
+    -max-memory=0 \
+~   -max-depth=100 \
+    -search=dfs \
+    -write-paths \
+    -use-cex-cache=false \
+    -ranged-analysis \
+    -beginTestCase=/home/flandini/research/ranged_analysis/klee-out-59/test000012.kquery \
+    -endTestCase=/home/flandini/research/ranged_analysis/klee-out-59/test000016.kquery \
+    /home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc \
+    -sym-args 1 2 20
+`
