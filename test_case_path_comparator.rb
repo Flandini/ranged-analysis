@@ -57,7 +57,8 @@ def compare(directory)
   puts sortedPaths
   sortedPaths
 
-  static_range_select(sortedPaths)
+  chosenTestCases = static_range_select(sortedPaths)
+  generate_slurm_conf_file(chosenTestCases, "/home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc")
 end
 
 def static_range_select(pathFiles)
@@ -73,12 +74,12 @@ def static_range_select(pathFiles)
   lastTestCaseIndex = pathFiles.find_index(lastTestCaseGenerated)
   testCasesLessThanLast = pathFiles[0..lastTestCaseIndex]
 
-  numTestCasesToTake = 9
+  numTestCasesToTake = 10
   chosenTestCases = []
   chosenTestCases << startTestCase
   chosenTestCases << lastTestCaseGenerated
 
-  while chosenTestCases.length != numTestCasesToTake
+  while chosenTestCases.length <= numTestCasesToTake
     chosenTestCases << testCasesLessThanLast.sample
     chosenTestCases = chosenTestCases.uniq
   end
@@ -91,6 +92,40 @@ end
 
 def get_last_test_case(pathFiles)
   pathFiles.sort[-1]
+end
+
+# @param pathFiles  the chosen random pathFiles making
+#                   up the 10 ranges for a coreutils bin
+def generate_slurm_conf_file(pathFiles, binary)
+  current = 0
+  rows = []
+  workDir = "/work/06262/zzz/"
+
+  pathFiles.each_cons(2) do |pathFilePair|
+    rowString = ""
+    rowString << "#{current} "
+    rowString << File.join(workDir, "/klee-dev/build/bind/klee").to_s
+    rowString << " -posix-runtime "
+    rowString << " -libc=uclibc "
+    rowString << " -max-time=600 "
+    rowString << " -max-memory=0 "
+    rowString << " -max-depth=75 "
+    rowString << " -search=dfs"
+    rowString << " -write-paths "
+    rowString << " -use-cex-cache=false "
+    rowString << " -ranged-analysis "
+    rowString << " -beginTestCase="
+    rowString << pathFilePair.first + " "
+    rowString << " -endTestCase="
+    rowString << pathFilePair.last + " "
+    rowString << binary + " "
+    rowString << "-sym-args 1 2 20\n"
+
+    rows << rowString
+    current += 1
+  end
+
+  puts rows
 end
 
 compare ARGV[0]
