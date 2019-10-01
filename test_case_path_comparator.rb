@@ -41,6 +41,12 @@ class TestCase
   end
 end
 
+
+def get_binary_name(dir)
+  info = File.read(File.join(dir, "info"))
+  return info =~ /\s(\/.*?\.0\.5\.precodegen\.bc)/i ? $1 : nil
+end
+
 def compare(directory)
   pathFiles = Dir.glob("#{directory}/test*.path")
 
@@ -58,7 +64,7 @@ def compare(directory)
   sortedPaths
 
   chosenTestCases = static_range_select(sortedPaths)
-  generate_slurm_conf_file(chosenTestCases, "/home/flandini/research/ranged_analysis/coreutils/src/base64.0.5.precodegen.bc")
+  generate_slurm_conf_file(chosenTestCases, get_binary_name(directory))
 end
 
 def static_range_select(pathFiles)
@@ -101,10 +107,12 @@ def generate_slurm_conf_file(pathFiles, binary)
   rows = []
   workDir = "/work/06262/zzz/"
 
+  pathFiles = pathFiles.map { |p| p.gsub(".path", ".kquery") }
+
   pathFiles.each_cons(2) do |pathFilePair|
     rowString = ""
     rowString << "#{current} "
-    rowString << File.join(workDir, "/klee-dev/build/bind/klee").to_s
+    rowString << File.join(workDir, "/klee-dev/build/bin/klee").to_s
     rowString << " -posix-runtime "
     rowString << " -libc=uclibc "
     rowString << " -max-time=600 "
